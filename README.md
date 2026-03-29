@@ -1,3 +1,7 @@
+# Deployed Link 
+
+https://et-newsroom-woad.vercel.app/
+
 # ET Newsroom — Production-Ready AI News Platform
 
 Full-stack Next.js 14 app with **Supabase** (auth + database), **NewsData.io** (real news), and **Groq** (free AI).
