@@ -59,12 +59,14 @@ export async function PATCH(request: NextRequest) {
     }
   }
 
-  const { data, error } = await supabase
-    .from("profiles")
-    .update(update)
-    .eq("id", user.id)
-    .select()
-    .single();
+ const { data, error } = await supabase
+  .from("profiles")
+  .update(
+    update as Database["public"]["Tables"]["profiles"]["Update"]
+  )
+  .eq("id", user.id)
+  .select()
+  .single();
 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 500 });
