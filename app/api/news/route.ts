@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
 // Save a bookmark
 export async function POST(request: NextRequest) {
-  const supabase = await await createClient();
+  const supabase = await createClient();
 
   const {
     data: { user },
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
 // Delete a bookmark
 export async function DELETE(request: NextRequest) {
-  const supabase = await await createClient();
+  const supabase = await createClient();
 
   const {
     data: { user },

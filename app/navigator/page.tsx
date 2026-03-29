@@ -51,7 +51,7 @@ const SUGGESTIONS = [
 ];
 
 export default function NavigatorPage() {
-  const supabase = await createClient();
+  const supabase = createClient();
   const [topic, setTopic] = useState(TOPICS[0]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");

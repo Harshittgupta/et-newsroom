@@ -17,7 +17,7 @@ const ALL_INTERESTS = [
 ];
 
 export default function SettingsPage() {
-  const supabase = await createClient();
+  const supabase = createClient();
   const [fullName, setFullName] = useState("");
   const [persona, setPersona] = useState("investor");
   const [interests, setInterests] = useState<string[]>(["Markets", "Economy"]);

@@ -15,7 +15,7 @@ const PERSONAS = [
 
 export default function SignupPage() {
   const router = useRouter();
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const [step, setStep] = useState<"account" | "persona">("account");
   const [fullName, setFullName] = useState("");

@@ -31,7 +31,7 @@ const MOCK_PRICES: Record<string, { change: string; up: boolean }> = {
 };
 
 export default function MyETPage() {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const [profile, setProfile]     = useState<Profile | null>(null);
   const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
