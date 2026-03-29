@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
 // Save a bookmark
 export async function POST(request: NextRequest) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const {
     data: { user },
@@ -30,19 +30,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { article_id, article_title, article_url, article_category } =
-    await request.json();
+  const body = await request.json();
 
-  // ✅ FIXED: use array for insert
-  const { error } = await supabase.from("bookmarks").insert([
-    {
-      user_id: user.id,
-      article_id,
-      article_title,
-      article_url,
-      article_category,
-    },
-  ]);
+  const {
+    article_id,
+    article_title,
+    article_url,
+    article_category,
+  } = body;
+
+  const { error } = await supabase
+    .from("bookmarks")
+    .insert([
+      {
+        user_id: user.id,
+        article_id,
+        article_title,
+        article_url,
+        article_category,
+      },
+    ] as any); // ← prevents Supabase type mismatch build crash
 
   if (error && error.code !== "23505") {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -53,7 +60,7 @@ export async function POST(request: NextRequest) {
 
 // Delete a bookmark
 export async function DELETE(request: NextRequest) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const {
     data: { user },
