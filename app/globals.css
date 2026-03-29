@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gold: #E8B84B;
+  --scarlet: #E83B3B;
+  --jade: #00C896;
+  --ink: #05050A;
+  --pearl: #F0EDE8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: #05050A;
+  color: #F0EDE8;
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0D0D1A; }
+::-webkit-scrollbar-thumb { background: #E8B84B44; border-radius: 2px; }
+
+/* Glass card */
+.glass {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.glass-gold {
+  background: rgba(232,184,75,0.06);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(232,184,75,0.15);
+}
+
+/* Gold line accent */
+.gold-line {
+  border-left: 3px solid var(--gold);
+}
+
+/* Ticker */
+.ticker-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Gradient text */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #E8B84B, #F5D07A, #B8892A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-multi {
+  background: linear-gradient(135deg, #E8B84B 0%, #E83B3B 50%, #3B82F6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Noise texture overlay */
+.noise::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px;
+  z-index: 9999;
+}
+
+/* Category pills */
+.pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Nav link hover */
+.nav-link {
+  position: relative;
+  transition: color 0.2s;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 100%;
+  height: 1px;
+  background: var(--gold);
+  transition: right 0.3s ease;
+}
+.nav-link:hover::after, .nav-link.active::after { right: 0; }
+
+/* Card hover lift */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+/* ET Masthead grid lines */
+.masthead-grid {
+  background-image:
+    linear-gradient(rgba(232,184,75,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,184,75,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Loading shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #1a1a2e 25%, #252540 50%, #1a1a2e 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Pulse ring */
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+.ping-slow { animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
