@@ -1,18 +1,20 @@
-// This file represents the shape of your Supabase database.
-// Run `npm run db:types` to regenerate from your live schema.
-// Or keep this file as-is — it matches the SQL in supabase/schema.sql
-
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
 
 export interface Database {
   public: {
     Tables: {
       profiles: {
         Row: {
-          id: string;                  // uuid — matches auth.users.id
+          id: string;
           email: string;
           full_name: string | null;
-          persona: string;             // "investor" | "founder" | "student" | "analyst"
+          persona: string;
           interests: string[];
           created_at: string;
           updated_at: string;
@@ -33,11 +35,12 @@ export interface Database {
           updated_at?: string;
         };
       };
+
       bookmarks: {
         Row: {
           id: string;
           user_id: string;
-          article_id: string;          // external ID from NewsData.io
+          article_id: string;
           article_title: string;
           article_url: string;
           article_category: string;
@@ -52,14 +55,23 @@ export interface Database {
           article_category: string;
           created_at?: string;
         };
-        Update: never;
+        Update: {
+          id?: string;
+          user_id?: string;
+          article_id?: string;
+          article_title?: string;
+          article_url?: string;
+          article_category?: string;
+          created_at?: string;
+        };
       };
+
       watchlist: {
         Row: {
           id: string;
           user_id: string;
-          symbol: string;              // e.g. "HDFCBANK", "RELIANCE"
-          display_name: string;        // e.g. "HDFC Bank"
+          symbol: string;
+          display_name: string;
           added_at: string;
         };
         Insert: {
@@ -69,14 +81,21 @@ export interface Database {
           display_name: string;
           added_at?: string;
         };
-        Update: never;
+        Update: {
+          id?: string;
+          user_id?: string;
+          symbol?: string;
+          display_name?: string;
+          added_at?: string;
+        };
       };
+
       briefing_history: {
         Row: {
           id: string;
           user_id: string;
           topic: string;
-          messages: Json;              // array of {role, content}
+          messages: Json;
           created_at: string;
         };
         Insert: {
@@ -91,6 +110,7 @@ export interface Database {
         };
       };
     };
+
     Views: {};
     Functions: {};
     Enums: {};

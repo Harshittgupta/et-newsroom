@@ -92,6 +92,7 @@ export async function fetchNews(
 
   // No API key → return rich mock data
   if (!apiKey) {
+    console.warn("[fetchNews] No NEWSDATA_API_KEY found, using mock data");
     return MOCK_NEWS.map(n => ({
       ...n,
       url: "#",
@@ -100,6 +101,8 @@ export async function fetchNews(
     })) as unknown as Article[];
   }
 
+  console.log(`[fetchNews] API key found: ${apiKey.substring(0, 8)}...`);
+
   const cacheKey = `${persona}-${category}`;
   const cached = cache.get(cacheKey);
   if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
@@ -107,19 +110,55 @@ export async function fetchNews(
   }
 
   try {
-    // Build query — always India business news
-    const query = encodeURIComponent("India business economy markets finance");
+    // Build query — simpler query for better results with free tier
+    const query = encodeURIComponent("India business");
     const country = "in";
     const lang = "en";
-    const cat = category !== "all" ? `&category=${category === "markets" ? "business" : category}` : "";
+    
+    // Build category parameter only if not "all"
+    let catParam = "";
+    if (category !== "all") {
+      // Map our internal categories to NewsData.io categories
+      const categoryMap: Record<string, string> = {
+        "markets": "business",
+        "economy": "business", 
+        "policy": "politics",
+        "tech": "technology",
+        "global": "world"
+      };
+      const apiCategory = categoryMap[category] || "business";
+      catParam = `&category=${apiCategory}`;
+    }
 
-    const url = `https://newsdata.io/api/1/news?apikey=${apiKey}&q=${query}&country=${country}&language=${lang}${cat}&size=20`;
+    // Use the latest endpoint - this is the correct endpoint for free tier
+    const url = `https://newsdata.io/api/1/latest?apikey=${apiKey}&q=${query}&country=${country}&language=${lang}${catParam}`;
 
-    const res = await fetch(url, { next: { revalidate: 900 } }); // Next.js cache 15 min
-    if (!res.ok) throw new Error(`NewsData error: ${res.status}`);
+    console.log(`[fetchNews] Fetching from NewsData.io for ${persona}/${category}`);
+    
+    const res = await fetch(url, { 
+      cache: 'no-store' // Disable caching to always get fresh data
+    }); 
+    
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error(`[fetchNews] API error ${res.status}:`, errorText);
+      throw new Error(`NewsData error: ${res.status}`);
+    }
 
     const data = await res.json();
-    if (data.status !== "success") throw new Error("NewsData returned non-success");
+    
+    // Check for API-specific error messages
+    if (data.status === "error") {
+      console.error("[fetchNews] API returned error:", data.results?.message || JSON.stringify(data.results));
+      throw new Error(data.results?.message || "NewsData returned error status");
+    }
+    
+    if (data.status !== "success") {
+      console.error("[fetchNews] Unexpected status:", data.status);
+      throw new Error("NewsData returned non-success");
+    }
+    
+    console.log(`[fetchNews] Successfully fetched ${data.results?.length || 0} articles`);
 
     const articles: Article[] = (data.results ?? [])
       .filter((item: Record<string, string>) => item.title && item.description)
