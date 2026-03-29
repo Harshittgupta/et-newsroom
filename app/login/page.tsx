@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function LoginPage() {
   const router = useRouter();
   const params = useSearchParams();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

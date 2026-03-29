@@ -21,7 +21,7 @@ export default function Navigation() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {

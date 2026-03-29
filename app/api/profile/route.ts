@@ -4,7 +4,7 @@ import type { Database } from "@/lib/database.types";
 
 // GET /api/profile — fetch current user's profile + watchlist + bookmarks
 export async function GET() {
-  const supabase = await createClient();
+  const supabase = await await createClient();
 
   const {
     data: { user },
@@ -36,7 +36,7 @@ export async function GET() {
 
 // PATCH /api/profile — update persona or interests
 export async function PATCH(request: NextRequest) {
-  const supabase = await createClient();
+  const supabase = await await createClient();
 
   const {
     data: { user },
