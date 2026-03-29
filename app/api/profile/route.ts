@@ -1,16 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import type { Database } from "@/lib/database.types";
 
 // GET /api/profile — fetch current user's profile + watchlist + bookmarks
 export async function GET() {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const [profileRes, watchlistRes, bookmarksRes] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", user.id).single(),
-    supabase.from("watchlist").select("*").eq("user_id", user.id).order("added_at"),
-    supabase.from("bookmarks").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
+    supabase
+      .from("watchlist")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("added_at"),
+    supabase
+      .from("bookmarks")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false }),
   ]);
 
   return NextResponse.json({
@@ -23,14 +37,26 @@ export async function GET() {
 // PATCH /api/profile — update persona or interests
 export async function PATCH(request: NextRequest) {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  const allowed = ["persona", "interests", "full_name"];
-  const update: Record<string, unknown> = {};
+
+  const allowed = ["persona", "interests", "full_name"] as const;
+
+  const update: Partial<
+    Database["public"]["Tables"]["profiles"]["Update"]
+  > = {};
+
   for (const key of allowed) {
-    if (key in body) update[key] = body[key];
+    if (key in body) {
+      update[key] = body[key];
+    }
   }
 
   const { data, error } = await supabase
@@ -40,6 +66,8 @@ export async function PATCH(request: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 500 });
+
   return NextResponse.json({ profile: data });
 }
