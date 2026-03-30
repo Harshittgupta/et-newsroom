@@ -98,11 +98,6 @@ export default function HomePage() {
           transition={{ duration: 0.8 }}
           className="text-center max-w-4xl mx-auto"
         >
-          <div className="inline-flex items-center gap-2 glass-gold px-4 py-1.5 rounded-full mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-            <span className="text-gold text-xs font-medium tracking-wide">Powered by Claude AI</span>
-          </div>
-
           <h1 className="font-display text-5xl sm:text-7xl font-black mb-6 leading-none tracking-tight">
             <span className="text-pearl">Not just news.</span>
             <br />
